@@ -7,6 +7,7 @@ import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import UserSchema from "./src/models/UserSchema.js";
 import { publisher,subscriber } from "../Delievery_Server_2/redis-client/index.js";
+import { worker } from "./src/Redis_consumer.js";
 
 async function startApolloServer() {
   const app = express();

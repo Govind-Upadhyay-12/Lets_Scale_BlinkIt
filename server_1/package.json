@@ -25,6 +25,7 @@
     "body-parser": "^1.20.2",
     "brace-expansion": "^1.1.11",
     "braces": "^3.0.2",
+    "bullmq": "^5.3.3",
     "bytes": "^3.1.2",
     "call-bind": "^1.0.7",
     "chokidar": "^3.6.0",

@@ -3,7 +3,16 @@ import bodyparser from "body-parser";
 import mongoose from "mongoose";
 import Authenticate from "./routes/Auth.js";
 import { publisher, subscriber } from "./redis-client/index.js";
-import { channel } from "diagnostics_channel";
+import { Queue } from "bullmq";
+
+const connectionOpts = {
+  host: "127.0.0.1",
+  port: 6379,
+};
+
+const notificationQueue = new Queue("data-queue", {
+  connection: connectionOpts,
+});
 
 const app = express();
 app.use(bodyparser.json());
@@ -32,6 +41,12 @@ publicMessage();
 subscriber.subscribe("sending_to_delievery");
 subscriber.on("message", async (channel, message) => {
   console.log(channel, JSON.parse(message));
+
+  const notification_message = "Booked Successfully";
+  const result = await notificationQueue.add("data-adding-to-queue", {
+    notification_message,
+  });
+  console.log("job added to the queue", result.id);
 });
 
 app.listen(PORT, () => {
