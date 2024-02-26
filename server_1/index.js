@@ -6,6 +6,7 @@ import resolvers from "./src/resolver.js";
 import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import UserSchema from "./src/models/UserSchema.js";
+import { publisher,subscriber } from "../Delievery_Server_2/redis-client/index.js";
 
 async function startApolloServer() {
   const app = express();
@@ -17,6 +18,12 @@ async function startApolloServer() {
   } catch (error) {
     console.error("Failed to connect to MongoDB:", error);
   }
+  subscriber.subscribe("message-publish");
+  subscriber.on("message",async(channel,message)=>{
+    if(channel=="message-publish"){
+      console.log(message)
+    }
+  })
 
   app.use(cors());
   app.use(bodyParser.json());

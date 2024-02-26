@@ -1,5 +1,6 @@
 import Order from "../models/Order.js";
 import UserSchema from "../models/UserSchema.js";
+import { publisher,subscriber } from "../../../Delievery_Server_2/redis-client/index.js";
 
 export const BookOrder = async (_, args) => {
   try {
@@ -19,6 +20,13 @@ export const BookOrder = async (_, args) => {
     await Order_Data.save();
     const order_id = Order_Data._id;
     const User_update = await user.order.push(order_id);
+    const sending_Data={
+      array:data,
+      user:user
+    }
+    const stringifiedData = JSON.stringify(sending_Data);
+    console.log(stringifiedData);
+    publisher.publish("sending_to_delievery", stringifiedData);
     await user.save();
     console.log("hua");
     return "hogya";
